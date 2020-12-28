@@ -1,0 +1,91 @@
+package divine.client.gui.buttons;
+
+import divine.main.Reference;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+@SideOnly(Side.CLIENT)
+public class MainButton extends GuiButton
+{
+    protected static final ResourceLocation resource = new ResourceLocation(Reference.MODID + ":textures/gui/buttons.png");
+    FontRenderer fontrenderer;
+	private float scaleFactor;
+	private static int strWidth, strHeight;
+	
+	public MainButton(int id, float sF, int xPos, int yPos, int width, int height, String str)
+	{
+		super(id, xPos, yPos, width, height, str);
+		this.scaleFactor = sF;
+		this.visible = true;
+		this.width = width;
+		this.height = height;
+	}
+	public MainButton(int id, float sF, int xPos, int yPos, int width, int height)
+	{
+		super(id, xPos, yPos, width, height, "");
+		this.scaleFactor = sF;
+		this.visible = true;
+		this.width = width;
+		this.height = height;
+	}
+	public MainButton(int id, float sF, int xPos, int yPos, String str)
+	{
+		super(id, xPos, yPos, strWidth, strHeight, str);
+		fontrenderer = Minecraft.getMinecraft().fontRenderer;
+		strWidth = fontrenderer.getStringWidth(str) + 10;
+		strHeight = 20;
+		this.scaleFactor = sF;
+		this.visible = true;
+		this.width = strWidth;
+		this.height = strHeight;
+	}
+	
+	
+	 @Override
+	 public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks)
+	    {
+		 if (this.visible)
+	        {
+			 	fontrenderer = mc.fontRenderer;
+	            mc.getTextureManager().bindTexture(resource);
+	            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+	            this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+	            int i = this.getHoverState(this.hovered);
+	            GlStateManager.enableBlend();
+	            GlStateManager.scale(1*scaleFactor, 1*scaleFactor, 1);
+	            GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+	            GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+	            drawTexturedModalRect(x, y, 0, 0 + i * 20, width / 2, height);
+	  	      	drawTexturedModalRect(x + width / 2, y, 200 - width / 2, 0 + i * 20, width / 2, height);
+	            this.mouseDragged(mc, mouseX, mouseY);
+	            int j = 14737632;
+	            
+	            if (packedFGColour != 0)
+	            {
+	                j = packedFGColour;
+	            }
+	            else
+	            if (!this.enabled)
+	            {
+	                j = 10526880;
+	            }
+	            else if (this.hovered)
+	            {
+	                j = 16777120;
+	            }
+	            
+	            this.drawCenteredString(fontrenderer, this.displayString, this.x + this.width / 2, this.y + (this.height - 8) / 2, j);
+	        }
+	    }
+		
+		public int getId()
+		{
+			return id;
+		}
+		
+}
